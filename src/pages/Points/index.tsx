@@ -18,6 +18,7 @@ interface Item {
 interface Point {
     id: number;
     image: string;
+    img_url: string;
     name: string;
     latitude: number;
     longitude: number;
@@ -39,24 +40,24 @@ const Points = () => {
     const [points, setPoints] = useState<Point[]>([]);
     const [items, setItems] = useState<Item[]>([]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
-
+    
     useEffect(() => {
         async function locationUserPsition() {
             const { status } = await Location.requestPermissionsAsync();
-
+            
             if (status != 'granted') {
                 Alert.alert('Vish!!', 'Precisamos da sua localização para mostrar-lhe pontos de colata próximos.');
                 return;
             }
-
+            
             const location = await Location.getCurrentPositionAsync();
-
+            
             const { latitude, longitude } = location.coords;
-
+            
             setInitialMapArea([latitude, longitude]);
         }
-
         locationUserPsition();
+
     }, [selectedItems]);
 
     useEffect(() => {
@@ -107,11 +108,11 @@ const Points = () => {
 
                 <Text style={styles.title}>
                     Bem vindo.
-            </Text>
+                </Text>
 
                 <Text style={styles.description}>
                     Encontre no mapa pontos para a coleta.
-            </Text>
+                </Text>
 
                 <View style={styles.mapContainer}>
                     {initialMapArea[0] !== 0 && (
@@ -125,20 +126,21 @@ const Points = () => {
                                 longitudeDelta: 0.014,
                             }}
                         >
-                            {points.map(point => (
+                            {points.map((point: any, index: any) => (
+                                
                                 <Marker
-                                    key={String(point.id)}
+                                    key={String(index)}
                                     style={styles.mapMarker}
                                     coordinate={{
-                                        latitude: point.latitude,
-                                        longitude: point.longitude
+                                        latitude: point[index].latitude,
+                                        longitude: point[index].longitude
                                     }}
-                                    onPress={() => handleDetailPoint(point.id)}
+                                    onPress={() => handleDetailPoint(point[index].id)}
                                 >
                                     <View style={styles.mapMarkerContainer}>
-                                        <Image style={styles.mapMarkerImage} source={{ uri: point.image }} />
+                                        <Image style={styles.mapMarkerImage} source={{ uri: point.img_url }} />
                                         <Text style={styles.mapMarkerTitle}>
-                                            {point.name}
+                                            {point[index].name}
                                         </Text>
                                     </View>
                                 </Marker>

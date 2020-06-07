@@ -53,7 +53,7 @@ const Home = () => {
     }, [selectedUf]);
 
     function handleNavigateButton() {
-        navigate.navigate('Points', { city : selectedCity, uf: selectedUf});
+        navigate.navigate('Points', { city : selectedCity , uf: selectedUf });
     }
 
     function returnSelectItems(selectObject: string[]){
